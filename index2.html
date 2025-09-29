@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title style="font-size:30px">TMIC Color Picker</title>
+    <style>
+        body { font-family: Arial; text-align: center; padding: 20px; }
+        canvas { border: 0px solid black; cursor: crosshair; max-width: 1322px; max-height: 744px; }
+        #colorDisplay { font-size: 20px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+<h1 style="font-size:50px">TMIC Color Picker</h1>
+<canvas id="imageCanvas"></canvas>
+<div id="colorDisplay">Click an image pixel to see its HEX value</div>
+<script>
+    const canvas = document.getElementById('imageCanvas');
+    const ctx = canvas.getContext('2d');
+    const colorDisplay = document.getElementById('colorDisplay');
+    let img = new Image();
+    img.crossOrigin = "anonymous";
+    
+    // Replace this URL with your desired image
+    img.src = "https://raw.githubusercontent.com/ibtsaamqadir/color-picker/c4618380659f440d7040aed938c547b0ba22a79d/tmic-color-palette.png";
+    
+    img.onload = function() {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+    }
+    canvas.addEventListener('click', function(event) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const x = Math.floor((event.clientX - rect.left) * scaleX);
+        const y = Math.floor((event.clientY - rect.top) * scaleY);
+        
+        const pixel = ctx.getImageData(x, y, 1, 1).data;
+        const r = pixel[0], g = pixel[1], b = pixel[2];
+        const hex = rgbToHex(r, g, b);
+        colorDisplay.innerHTML = `Chosen Color: <span style="color:${hex}">${hex}</span>`;
+        navigator.clipboard.writeText(hex).then(() => {
+            console.log(`Copied ${hex} to clipboard`);
+        });
+    });
+    function rgbToHex(r, g, b) {
+        return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+    }
+</script>
+</body>
+</html>

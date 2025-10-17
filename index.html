@@ -38,7 +38,8 @@
         const pixel = ctx.getImageData(x, y, 1, 1).data;
         const r = pixel[0], g = pixel[1], b = pixel[2];
         const hex = rgbToHex(r, g, b);
-        colorDisplay.innerHTML = `Chosen Color: <span style="color:${hex}">${hex}</span>`;
+        '''colorDisplay.innerHTML = `Chosen Color: <span style="color:${hex}">${hex}</span>`;'''
+        colorDisplay.innerHTML = `Chosen Color: <span style="color:${hex}">${hex}</span> (RGB: ${r}, ${g}, ${b})`;
         navigator.clipboard.writeText(hex).then(() => {
             console.log(`Copied ${hex} to clipboard`);
         });
